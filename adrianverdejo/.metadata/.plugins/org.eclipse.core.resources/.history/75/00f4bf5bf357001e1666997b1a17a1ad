@@ -54,10 +54,10 @@ public class Launcher {
 		int minimaPuntuacion = mapaDePuntuaciones.get(paisMinPunt);
 		
 		System.out.println("Pais con maxima puntuacion");
-		System.out.println(paisMaxPunt.getNombre()+" : "+ maximaPuntuacion + " Puntos");
+		System.out.println(paisMaxPunt.getNombre()+" : "+ maximaPuntuacion + " puntos");
 		
 		System.out.println("Pais con maxima puntuacion");
-		System.out.println(paisMinPunt.getNombre()+" : "+ minimaPuntuacion + " Puntos");
+		System.out.println(paisMinPunt.getNombre()+" : "+ minimaPuntuacion + " puntos");
 
 	}
 
