@@ -1,63 +1,70 @@
 package eurovision;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 public class Launcher {
 
 	public static void main(String[] args) {
 		
-		ArrayList<Paises> pais = new ArrayList<>();
-		pais.add(new Paises("Servia", 3));
-		pais.add(new Paises("Moldavia", 8));
-		pais.add(new Paises("Hungria", 5));
-		pais.add(new Paises("Ucrania", 2));
-		pais.add(new Paises("Hungria", 5));
-		pais.add(new Paises("Suecia", 1));
-		pais.add(new Paises("Australia", 4));
-		pais.add(new Paises("Noruega", 7));
-		pais.add(new Paises("Dinamarca", 1));
-		pais.add(new Paises("Eslovenia", 3));
-		pais.add(new Paises("Holanda", 10));
-		pais.add(new Paises("Albania", 6));
-		pais.add(new Paises("República Checa", 4));
-		pais.add(new Paises("Lituania", 1));
-		pais.add(new Paises("Israel", 5));
-		pais.add(new Paises("Estonia", 8));
-		pais.add(new Paises("Bulgaria", 2));
-		pais.add(new Paises("Austria", 7));
-		pais.add(new Paises("Finlandia", 4));
-		pais.add(new Paises("Irlanda", 2));
-		pais.add(new Paises("Chipre", 1));
-		pais.add(new Paises("Italia", 6));
-		pais.add(new Paises("Reino Unido", 5));
-		pais.add(new Paises("Francia", 1));
-		pais.add(new Paises("Alemania", 10));
-		pais.add(new Paises("España", 12));
-		
-		Collections.sort(pais);
-		
-		for (Paises paises : pais){
-			System.err.println(paises.getNombre()+ " : "+ paises.getPuntuacion());
-		}
-		
-		Map<Paises, Integer> mapaDePuntuaciones = new HashMap<>();
-		
-		Paises paisMaxPunt = Collections.max(mapaDePuntuaciones.entrySet(), Map.Entry.comparingByValue()).getKey();
-		int maximaPuntuacion = mapaDePuntuaciones.get(paisMaxPunt);
-		
-		Paises paisMinPunt = Collections.min(mapaDePuntuaciones.entrySet(), Map.Entry.comparingByValue()).getKey();
-		int minimaPuntuacion = mapaDePuntuaciones.get(paisMinPunt);
-		
-		System.out.println("Pais con maxima puntuacion");
-		System.out.println(paisMaxPunt.getNombre()+" : "+ maximaPuntuacion + " Puntos");
-		
-		System.out.println("Pais con maxima puntuacion");
-		System.out.println(paisMinPunt.getNombre()+" : "+ minimaPuntuacion + " Puntos");
+		// Crea un mapa para almacenar la puntuacion de cada pais
+	    Map<String, Integer> puntuacion = new HashMap<>();
+
+	    // Itera por los paises finalistas
+	    for (String pais : Paises.paisesFinalistas) {
+	        // Genera aleatoriamente los 10 paises a los que va a votar
+	        Set<String> paisesVotados = generarPaisesVotados(pais);
+
+	        // Asigna los puntos a los paises votados
+	        for (String paisVotado : paisesVotados) {
+	            puntuacion.put(paisVotado, puntuacion.getOrDefault(paisVotado, 0) + generarPuntuacion());
+	        }
+	    }
+
+	    // Ordena la puntuacion por orden alfabetico
+	    Map<String, Integer> puntuacionOrdenada = puntuacion.entrySet().stream().sorted(Map.Entry.comparingByKey())
+	    		.collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+
+	    // Imprime la puntuacion ordenada
+	    System.out.println("Puntuación ordenada por orden alfabético:");
+	    for (Map.Entry<String, Integer> entrada : puntuacionOrdenada.entrySet()) {
+	        System.out.println(entrada.getKey() + ": " + entrada.getValue());
+	    }
+
+	    // Obtiene el pais con la puntuacion mas alta y la mas baja
+	    Map.Entry<String, Integer> paisMasAlto = puntuacion.entrySet().stream().max(Map.Entry.comparingByValue()).get();
+	    Map.Entry<String, Integer> paisMasBajo = puntuacion.entrySet().stream().min(Map.Entry.comparingByValue()).get();
+
+	    // Imprime el pais con la puntuacion mas alta y la mas baja
+	    System.out.println("País con la puntuación más alta: " + paisMasAlto.getKey() + " (" + paisMasAlto.getValue() + " puntos)");
+	    System.out.println("País con la puntuación más baja: " + paisMasBajo.getKey() + " (" + paisMasBajo.getValue() + " puntos)");
+	}
+
+	private static Set<String> generarPaisesVotados(String pais) {
+	    // Crea un conjunto para almacenar los paises votados
+	    Set<String> paisesVotados = new HashSet<>();
+
+	    // Itera por los paises finalistas
+	    for (String paisFinalista : Paises.paisesFinalistas) {
+	        // Si el pais no es el mismo que el que esta votando y no lo ha votado ya, lo añade al conjunto
+	        if (!pais.equals(paisFinalista) && !paisesVotados.contains(paisFinalista)) {
+	            paisesVotados.add(paisFinalista);
+	        }
+	    }
+
+	    // Devuelve el conjunto de paises votados
+	    return paisesVotados;
+	}
+
+	private static int generarPuntuacion() {
+	    // Genera un numero aleatorio entre 1 y 12
+	    int puntuacion = (int) (Math.random() * 12) + 1;
+
+	    // Devuelve la puntuacion
+	    return puntuacion;
 
 	}
 
